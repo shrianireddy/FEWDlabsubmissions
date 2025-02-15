@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET and POST Methods</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Michroma", serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 300px;
+            text-align: center;
+        }
+        input {
+            width: 90%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>GET Method</h2>
+        <form action="action.php" method="GET">
+            <input type="text" name="name" placeholder="Enter Name" required><br>
+            <input type="password" name="password" placeholder="Enter Password" required><br>
+            <button type="submit">Submit (GET)</button>
+        </form>
+    </div>
+    
+    <div class="container">
+        <h2>POST Method</h2>
+        <form action="action.php" method="POST">
+            <input type="text" name="name" placeholder="Enter Name" required><br>
+            <input type="password" name="password" placeholder="Enter Password" required><br>
+            <button type="submit">Submit (POST)</button>
+        </form>
+    </div>
+</body>
+</html>
