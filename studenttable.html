@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Table with Image Upload</title>
+    <link href="https://fonts.cdnfonts.com/css/neue-machina" rel="stylesheet">
+        <style>
+        body {
+            font-family: 'Neue Machina', 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #a567ae;
+            color: white;
+            font-weight: 700;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgb(255, 169, 236);
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .close:hover {
+            color: #555;
+        }
+
+        .upload-button {
+            padding: 10px 20px;
+            background-color: #a567ae;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upload-button:hover {
+            background-color: #cdc0ff;
+        }
+
+        .uploaded-image {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Student Table</h1>
+    <table id="studentTable">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Profile Link</th>
+                <th>Upload Image</th>
+                <th>Uploaded Image</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Upload Image</h2>
+            <input type="file" id="imageInput" accept="image/jpeg" style="display: none;">
+            <button class="upload-button" onclick="document.getElementById('imageInput').click()">Choose Image</button>
+            <p id="errorMessage" style="color: red; display: none;">Only JPEG images are allowed!</p>
+        </div>
+    </div>
+
+    <script>
+        const students = [
+            {
+                name: "Rahul Sharma",
+                address: "24, Marine Drive, Mumbai, Maharashtra - 400020",
+                phone: "+91 98765 43210",
+                profileLink: "https://example.com/rahul",
+                image: ""
+            },
+            {
+                name: "Priya Patel",
+                address: "45, Connaught Place, New Delhi, Delhi - 110001",
+                phone: "+91 87654 32109",
+                profileLink: "https://example.com/priya",
+                image: ""
+            },
+            {
+                name: "Arjun Singh",
+                address: "12, MG Road, Bangalore, Karnataka - 560001",
+                phone: "+91 76543 21098",
+                profileLink: "https://example.com/arjun",
+                image: ""
+            },
+            {
+                name: "Ananya Gupta",
+                address: "78, Park Street, Kolkata, West Bengal - 700016",
+                phone: "+91 65432 10987",
+                profileLink: "https://example.com/ananya",
+                image: ""
+            },
+            {
+                name: "Vikram Joshi",
+                address: "33, Jubilee Hills, Hyderabad, Telangana - 500033",
+                phone: "+91 54321 09876",
+                profileLink: "https://example.com/vikram",
+                image: ""
+            }
+        ];
+        let currentStudentIndex = null;
+
+        function populateTable() {
+            const tableBody = document.querySelector("#studentTable tbody");
+            tableBody.innerHTML = "";
+
+            students.forEach((student, index) => {
+                const row = document.createElement("tr");
+
+                const serialNoCell = document.createElement("td");
+                serialNoCell.textContent = index + 1;
+                row.appendChild(serialNoCell);
+
+                const nameCell = document.createElement("td");
+                nameCell.textContent = student.name;
+                row.appendChild(nameCell);
+
+                const addressCell = document.createElement("td");
+                addressCell.textContent = student.address;
+                row.appendChild(addressCell);
+
+                const phoneCell = document.createElement("td");
+                phoneCell.textContent = student.phone;
+                row.appendChild(phoneCell);
+
+                const profileLinkCell = document.createElement("td");
+                const profileLink = document.createElement("a");
+                profileLink.href = student.profileLink;
+                profileLink.textContent = "View Profile";
+                profileLink.target = "_blank";
+                profileLinkCell.appendChild(profileLink);
+                row.appendChild(profileLinkCell);
+
+                const uploadCell = document.createElement("td");
+                const uploadButton = document.createElement("button");
+                uploadButton.textContent = "Upload Image";
+                uploadButton.className = "upload-button";
+                uploadButton.onclick = () => openModal(index);
+                uploadCell.appendChild(uploadButton);
+                row.appendChild(uploadCell);
+
+                const imageCell = document.createElement("td");
+                const uploadedImage = document.createElement("img");
+                uploadedImage.src = student.image;
+                uploadedImage.className = "uploaded-image";
+                uploadedImage.style.display = student.image ? "block" : "none";
+                imageCell.appendChild(uploadedImage);
+                row.appendChild(imageCell);
+
+                tableBody.appendChild(row);
+            });
+        }
+
+        function openModal(index) {
+            currentStudentIndex = index;
+            document.getElementById("uploadModal").style.display = "block";
+        }
+
+        function closeModal() {
+            document.getElementById("uploadModal").style.display = "none";
+            document.getElementById("errorMessage").style.display = "none";
+        }
+
+        document.getElementById("imageInput").addEventListener("change", function (event) {
+            const file = event.target.files[0];
+            const errorMessage = document.getElementById("errorMessage");
+
+            if (file && file.type === "image/jpeg") {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    students[currentStudentIndex].image = e.target.result;
+                    populateTable();
+                    closeModal();
+                };
+                reader.readAsDataURL(file);
+            } else {
+                errorMessage.style.display = "block";
+            }
+        });
+
+        window.onclick = function (event) {
+            const modal = document.getElementById("uploadModal");
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        populateTable();
+    </script>
+</body>
+</html>
