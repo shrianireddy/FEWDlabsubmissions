@@ -67,6 +67,47 @@
         .submit-btn:hover {
             background: #e0a800;
         }
+
+        .emoji-rating {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+
+        .emoji-rating .emoji {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .emoji-rating .emoji:hover {
+            transform: scale(1.2);
+        }
+
+        .emoji-rating .emoji.active {
+            transform: scale(1.2);
+            filter: brightness(1.2);
+        }
+
+        .range-rating {
+            width: 100%;
+            margin: 1rem 0;
+        }
+
+        .range-rating input[type="range"] {
+            width: 100%;
+        }
+
+        .range-rating .labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+        }
+
+        .range-rating .labels span {
+            font-size: 0.9rem;
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -91,6 +132,21 @@
                 <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
             </div>
 
+            <!-- Age Group Field -->
+            <div class="mb-3">
+                <label class="form-label">Age Group</label>
+                <div>
+                    <select class="form-select" id="age-group" required>
+                        <option value="" disabled selected>Select your age group</option>
+                        <option value="18-24">18-24</option>
+                        <option value="25-34">25-34</option>
+                        <option value="35-44">35-44</option>
+                        <option value="45-54">45-54</option>
+                        <option value="55+">55+</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Star Rating -->
             <div class="mb-3">
                 <label class="form-label">Rating</label>
@@ -102,6 +158,31 @@
                     <span class="star" data-value="5"><i class="fas fa-star"></i></span>
                 </div>
                 <input type="hidden" id="rating" name="rating" required>
+            </div>
+
+            <!-- How likely are you to recommend this to your friends? -->
+            <div class="mb-3">
+                <label class="form-label">How likely are you to recommend this to your friends?</label>
+                <div class="range-rating">
+                    <input type="range" id="recommendation" name="recommendation" min="1" max="10" value="5">
+                    <div class="labels">
+                        <span>1 (Not likely)</span>
+                        <span>10 (Very likely)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How satisfied are you? (Emoji Rating) -->
+            <div class="mb-3">
+                <label class="form-label">How satisfied are you?</label>
+                <div class="emoji-rating">
+                    <span class="emoji" data-value="1">😠</span>
+                    <span class="emoji" data-value="2">😞</span>
+                    <span class="emoji" data-value="3">😐</span>
+                    <span class="emoji" data-value="4">😊</span>
+                    <span class="emoji" data-value="5">😍</span>
+                </div>
+                <input type="hidden" id="satisfaction" name="satisfaction" required>
             </div>
 
             <!-- Questions Field -->
@@ -126,8 +207,9 @@
     <!-- Bootstrap JS and Popper.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-    <!-- JavaScript for Star Rating -->
+    <!-- JavaScript for Star Rating and Emoji Rating -->
     <script>
+        // Star Rating
         const stars = document.querySelectorAll('.star-rating .star');
         const ratingInput = document.getElementById('rating');
 
@@ -141,6 +223,25 @@
                         s.classList.add('active');
                     } else {
                         s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Emoji Rating
+        const emojis = document.querySelectorAll('.emoji-rating .emoji');
+        const satisfactionInput = document.getElementById('satisfaction');
+
+        emojis.forEach(emoji => {
+            emoji.addEventListener('click', () => {
+                const value = emoji.getAttribute('data-value');
+                satisfactionInput.value = value;
+
+                emojis.forEach(e => {
+                    if (e.getAttribute('data-value') === value) {
+                        e.classList.add('active');
+                    } else {
+                        e.classList.remove('active');
                     }
                 });
             });
